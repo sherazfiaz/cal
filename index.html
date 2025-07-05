@@ -1,227 +1,366 @@
  <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Calculator</title>
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Currency Exchange</title>
   <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
     body {
-      background-color: #1e1e1e;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #333;
+      min-height: 100vh;
       display: flex;
       justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
+      align-items: flex-start;
+      padding: 50px 15px;
+      transition: background 0.5s ease;
     }
-
-    #Calculator {
-      background: #2e2e2e;
-      border-radius: 25px;
-      box-shadow: 8px 8px 16px #1a1a1a, -8px -8px 16px #3a3a3a;
-      padding: 20px;
-      width: 320px;
-    }
-
-    #display {
-      width: 90%;
-      height: 60px;
-      background: #2e2e2e;
-      color: white;
-      font-size: 28px;
-      border: none;
-      border-radius: 15px;
-      margin-bottom: 25px;
+    .container {
+      background: #fff;
+      padding: 25px 20px;
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+      max-width: 380px;
+      width: 100%;
       text-align: center;
-      padding: 10px 15px;
-      box-shadow: inset 5px 5px 10px #1a1a1a, inset -5px -5px 10px #3a3a3a;
+      transition: box-shadow 0.3s ease;
+      overflow: hidden;
     }
-
-    .button-container {
-      display: grid;
-      grid-template-columns: repeat(4, 70px);
-      grid-gap: 15px;
+    .container:hover {
+      box-shadow: 0 20px 45px rgba(118, 75, 162, 0.6);
+    }
+    h1 {
+      font-weight: 800;
+      font-size: 1.7rem;
+      color: #5a2a83;
+      margin-bottom: 12px;
+      position: relative;
+      display: inline-block;
+      letter-spacing: 2px;
+    }
+    h1::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -6px;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      border-radius: 2px;
+      animation: underlineSlide 1.5s ease forwards;
+      opacity: 0;
+    }
+    @keyframes underlineSlide {
+      to { width: 100%; opacity: 1; }
+    }
+    h3 {
+      font-weight: 600;
+      color: #555;
+      margin-bottom: 30px;
+      font-size: 1.2rem;
+    }
+    #main-amount {
+      width: 100%;
+      padding: 14px 18px;
+      font-size: 1.2rem;
+      border-radius: 12px;
+      border: 2px solid #ddd;
+      outline: none;
+      transition: border-color 0.4s ease, box-shadow 0.4s ease;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+    #main-amount:focus {
+      border-color: #764ba2;
+      box-shadow: 0 0 15px rgba(118, 75, 162, 0.6);
+    }
+    .exchange-section {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 40px;
+    }
+    .box {
+      background: #fafafa;
+      border-radius: 18px;
+      padding: 15px 10px;
+      flex: 1 1 45%;
+      max-width: 170px;
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.15);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       justify-content: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: default;
+      font-size: 0.9rem;
+      height: 170px;
     }
-
-    .button {
-      height: 70px;
-      width: 70px;
-      font-size: 20px;
+    .box:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 35px rgba(118, 75, 162, 0.3);
+    }
+    .label {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #764ba2;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1.1px;
+      user-select: none;
+    }
+    .currency-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 10px;
+      color: #5a2a83;
+    }
+    .currency-info img {
+      width: 24px;
+      height: 16px;
+      border-radius: 3px;
+      box-shadow: 0 0 6px rgba(0, 0, 0, 0.12);
+      object-fit: cover;
+      margin-left: 1.6rem;
+    }
+    .country-name {
+      font-size: 1rem;
+      color: #777;
+      margin-bottom: 18px;
+    }
+    input[type="number"], select {
+      width: 90%;
+      padding: 8px 10px;
+      font-size: 0.9rem;
+      border-radius: 10px;
+      border: 2px solid #ccc;
+      outline: none;
+      text-align: center;
+      background-color: #fff;
+      margin-top: 5px;
+      box-sizing: border-box;
+      height: 36px;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-repeat: no-repeat;
+      background-position: 10px center;
+      padding-left: 40px;
+    }
+    input[readonly] {
+      background-color: #eee;
+      cursor: not-allowed;
+      color: #555;
+    }
+    .exchange-icon {
+      font-size: 1.8rem;
+      color: #764ba2;
+      align-self: center;
+      margin: 20px 0;
+      user-select: none;
+    }
+    button {
+      background-color: #764ba2;
       border: none;
-      border-radius: 50%;
-      background: #2e2e2e;
-      color: #fff;
+      color: white;
+      padding: 12px 36px;
+      font-size: 1.1rem;
+      border-radius: 15px;
       cursor: pointer;
-      box-shadow: 8px 8px 16px #1a1a1a, -8px -8px 16px #3a3a3a;
-      transition: all 0.2s;
+      transition: background-color 0.3s ease, transform 0.15s ease, box-shadow 0.3s ease;
+      font-weight: 700;
+      box-shadow: 0 8px 25px rgba(118, 75, 162, 0.5);
+      letter-spacing: 1.2px;
     }
-
-    .button:hover {
-      background: #393939;
+    button:hover {
+      background-color: #5a2a83;
+      transform: scale(1.07);
+      box-shadow: 0 12px 35px rgba(90, 42, 131, 0.7);
     }
+    /* @media (max-width: 620px) {
+      .exchange-section {
+        flex-direction: column;
+        gap: 20px;
+      }
+      .box {
+        flex: 1 1 100%;
+      }
+    } */
 
-    .button:active {
-      box-shadow: inset 8px 8px 16px #1a1a1a, inset -8px -8px 16px #3a3a3a;
-      transform: scale(0.95);
+  /* existing styles — as they are */
+
+  @media (max-width: 768px) {
+    body {
+      padding: 40px 10px;
     }
-
-    .button.equal {
-      background: #f39c12;
-      color: #fff;
-      box-shadow: 8px 8px 16px #bb740c, -8px -8px 16px #ffb830;
+    .container {
+      padding: 20px 15px;
+      border-radius: 16px;
     }
-
-    .button.equal:hover {
-      background: #ffa500;
+    h1 {
+      font-size: 1.5rem;
     }
-
-    /* ===================== */
-    /* RESPONSIVENESS START */
-    /* ===================== */
-
-    @media screen and (max-width: 768px) {
-      #Calculator {
-        width: 90%;
-        padding: 15px;
-      }
-
-      .button-container {
-        grid-template-columns: repeat(4, 1fr);
-        grid-gap: 10px;
-      }
-
-      .button {
-        width: 100%;
-        height: 60px;
-        font-size: 18px;
-      }
-
-      #display {
-        width: 100%;
-        font-size: 24px;
-      }
+    h3 {
+      font-size: 1.1rem;
     }
-
-    @media screen and (max-width: 480px) {
-      #Calculator {
-        padding: 10px;
-      }
-
-      .button {
-        height: 55px;
-        font-size: 16px;
-      }
-
-      #display {
-        font-size: 20px;
-        height: 50px;
-      }
+    #main-amount {
+      font-size: 1.05rem;
+      padding: 12px;
+      margin-bottom: 30px;
     }
+    .exchange-section {
+      flex-direction: column;
+      gap: 25px;
+      align-items: center;
+    }
+    .box {
+      width: 100%;
+      max-width: none;
+      height: auto;
+      padding: 15px;
+    }
+    input[type="number"],
+    select {
+      width: 100%;
+      padding-left: 40px;
+    }
+    button {
+      padding: 12px 24px;
+      font-size: 1rem;
+    }
+    .exchange-icon {
+      transform: rotate(90deg);
+      margin: 10px 0;
+    }
+  }
 
-    /* ===================== */
-    /* RESPONSIVENESS END */
-    /* ===================== */
+  @media (max-width: 480px) {
+    h1 {
+      font-size: 1.3rem;
+    }
+    h3 {
+      font-size: 1rem;
+    }
+    .currency-info img {
+      margin-left: 1rem;
+    }
+    .label {
+      font-size: 1rem;
+    }
+    .currency-info {
+      font-size: 0.95rem;
+    }
+    .country-name {
+      font-size: 0.9rem;
+    }
+    button {
+      width: 100%;
+    }
+  }
+</style>
 
+    
   </style>
 </head>
 <body>
+  <div class="container">
+    <h1>Currency Exchange</h1>
+    <h3>Enter Amount</h3>
+    <input type="number" id="main-amount" placeholder="Enter amount" />
 
-  <div id="Calculator">
-    <input type="text" id="display" readonly>
+    <div class="exchange-section">
+      <div class="box">
+        <div class="label">From</div>
+        <select id="from-currency" onchange="updateFlag('from')">
+          <option value="USD" data-rate="1" data-flag="https://flagcdn.com/us.svg" selected>USD - United States</option>
+          <option value="EUR" data-rate="0.92" data-flag="https://flagcdn.com/eu.svg">EUR - Eurozone</option>
+          <option value="GBP" data-rate="0.81" data-flag="https://flagcdn.com/gb.svg">GBP - United Kingdom</option>
+          <option value="PKR" data-rate="278" data-flag="https://flagcdn.com/pk.svg">PKR - Pakistan</option>
+          <option value="INR" data-rate="82" data-flag="https://flagcdn.com/in.svg">INR - India</option>
+          <option value="CAD" data-rate="1.35" data-flag="https://flagcdn.com/ca.svg">CAD - Canada</option>
+          <option value="AUD" data-rate="1.48" data-flag="https://flagcdn.com/au.svg">AUD - Australia</option>
+          <option value="JPY" data-rate="136" data-flag="https://flagcdn.com/jp.svg">JPY - Japan</option>
+          <option value="CNY" data-rate="7.3" data-flag="https://flagcdn.com/cn.svg">CNY - China</option>
+          <option value="CHF" data-rate="0.91" data-flag="https://flagcdn.com/ch.svg">CHF - Switzerland</option>
+        </select>
+        <div class="currency-info" id="from-currency-info">
+          <img src="https://flagcdn.com/us.svg" alt="From Flag" /> USD
+        </div>
+        <div class="country-name" id="from-country-name">United States</div>
+        <input type="number" id="from-amount" placeholder="From amount" />
+      </div>
 
-    <div class="button-container">
-      <button class="button" onclick="clearDisplay()">AC</button>
-      <button class="button" onclick="deleteLast()">DE</button>
-      <button class="button" onclick="appendToDisplay('%')">%</button>
-      <button class="button" onclick="appendToDisplay('/')">/</button>
+      <div class="exchange-icon">⇄</div>
 
-      <button class="button" onclick="appendToDisplay('7')">7</button>
-      <button class="button" onclick="appendToDisplay('8')">8</button>
-      <button class="button" onclick="appendToDisplay('9')">9</button>
-      <button class="button" onclick="appendToDisplay('*')">*</button>
-
-      <button class="button" onclick="appendToDisplay('4')">4</button>
-      <button class="button" onclick="appendToDisplay('5')">5</button>
-      <button class="button" onclick="appendToDisplay('6')">6</button>
-      <button class="button" onclick="appendToDisplay('-')">-</button>
-
-      <button class="button" onclick="appendToDisplay('1')">1</button>
-      <button class="button" onclick="appendToDisplay('2')">2</button>
-      <button class="button" onclick="appendToDisplay('3')">3</button>
-      <button class="button" onclick="appendToDisplay('+')">+</button>
-
-      <button class="button" onclick="appendToDisplay('00')">00</button>
-      <button class="button" onclick="appendToDisplay('0')">0</button>
-      <button class="button" onclick="appendToDisplay('.')">.</button>
-      <button class="button equal" onclick="calculateResult()">=</button>
+      <div class="box">
+        <div class="label">To</div>
+        <select id="to-currency" onchange="updateFlag('to')">
+          <option value="PKR" data-rate="278" data-flag="https://flagcdn.com/pk.svg" selected>PKR - Pakistan</option>
+          <option value="USD" data-rate="1" data-flag="https://flagcdn.com/us.svg">USD - United States</option>
+          <option value="EUR" data-rate="0.92" data-flag="https://flagcdn.com/eu.svg">EUR - Eurozone</option>
+          <option value="GBP" data-rate="0.81" data-flag="https://flagcdn.com/gb.svg">GBP - United Kingdom</option>
+          <option value="INR" data-rate="82" data-flag="https://flagcdn.com/in.svg">INR - India</option>
+          <option value="CAD" data-rate="1.35" data-flag="https://flagcdn.com/ca.svg">CAD - Canada</option>
+          <option value="AUD" data-rate="1.48" data-flag="https://flagcdn.com/au.svg">AUD - Australia</option>
+          <option value="JPY" data-rate="136" data-flag="https://flagcdn.com/jp.svg">JPY - Japan</option>
+          <option value="CNY" data-rate="7.3" data-flag="https://flagcdn.com/cn.svg">CNY - China</option>
+          <option value="CHF" data-rate="0.91" data-flag="https://flagcdn.com/ch.svg">CHF - Switzerland</option>
+        </select>
+        <div class="currency-info" id="to-currency-info">
+          <img src="https://flagcdn.com/pk.svg" alt="To Flag" /> PKR
+        </div>
+        <div class="country-name" id="to-country-name">Pakistan</div>
+        <input type="number" id="to-amount" placeholder="To amount" readonly />
+      </div>
     </div>
+
+    <button onclick="convertCurrency()">Convert</button>
   </div>
 
   <script>
-    let currentDisplay = '';
-    let lastOperation = '';
+    function updateFlag(side) {
+      const select = document.getElementById(side + '-currency');
+      const opt = select.options[select.selectedIndex];
+      const flagUrl = opt.getAttribute('data-flag');
+      const code = opt.value;
+      const country = opt.text.split(' - ')[1];
 
-    function updateDisplay() {
-      document.querySelector('#display').value = currentDisplay;
+      document.getElementById(side + '-currency-info').innerHTML =
+        `<img src="${flagUrl}" alt="${code} Flag" /> ${code}`;
+      document.getElementById(side + '-country-name').textContent = country;
     }
 
-    function appendToDisplay(value) {
-      if (currentDisplay === 'Error') {
-        clearDisplay();
+    function convertCurrency() {
+      const main = parseFloat(document.getElementById("main-amount").value);
+      if (isNaN(main) || main <= 0) {
+        alert("Please enter a valid positive amount");
+        return;
       }
-      currentDisplay += value;
-      updateDisplay();
+      const fromOpt = document.getElementById("from-currency").selectedOptions[0];
+      const toOpt   = document.getElementById("to-currency").selectedOptions[0];
+      const fromRate = parseFloat(fromOpt.getAttribute('data-rate'));
+      const toRate   = parseFloat(toOpt.getAttribute('data-rate'));
+
+      const inUSD = main / fromRate;
+      const result = inUSD * toRate;
+
+      document.getElementById("from-amount").value = main.toFixed(2);
+      document.getElementById("to-amount").value   = result.toFixed(2);
     }
 
-    function clearDisplay() {
-      currentDisplay = '';
-      lastOperation = '';
-      updateDisplay();
-    }
-
-    function deleteLast() {
-      if (currentDisplay === 'Error') {
-        clearDisplay();
-      }
-      currentDisplay = currentDisplay.slice(0, -1);
-      updateDisplay();
-    }
-
-    function calculateResult() {
-      try {
-        currentDisplay = eval(currentDisplay).toString();
-        lastOperation = currentDisplay;
-      } catch (e) {
-        currentDisplay = 'Error';
-      }
-      updateDisplay();
-    }
-
-    function repeatLastOperation() {
-      if (lastOperation !== '') {
-        currentDisplay = lastOperation;
-        updateDisplay();
-      }
-    }
-
-    updateDisplay();
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        calculateResult();
-      } else if (e.key === 'r') {
-        repeatLastOperation();
-      }
-    });
-
-    document.addEventListener('keydown', (e) => {
-      const allowedKeys = ['0','1','2','3','4','5','6','7','8','9','+','-','*','/','%','.'];
-      if (allowedKeys.includes(e.key)) {
-        appendToDisplay(e.key);
-      }
-    });
+    window.onload = function() {
+      updateFlag('from');
+      updateFlag('to');
+    };
   </script>
 </body>
 </html>
